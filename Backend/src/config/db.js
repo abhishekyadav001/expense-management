@@ -1,8 +1,8 @@
 const { default: mongoose } = require("mongoose");
 require("dotenv").config();
-
-const connection = () => {
-  mongoose.connect(process.env.DB_URL);
+const url = process.env.DB_URL;
+const connection = async () => {
+  await mongoose.connect(url);
 };
 
 module.exports = { connection };

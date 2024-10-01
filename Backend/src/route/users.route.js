@@ -1,11 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const {
-  userSignupController,
-  userLoginController,
-  userLogoutController,
-  userGetUserController,
-} = require("../controller/user.controller");
+const { userSignupController, userLoginController, userLogoutController } = require("../controller/user.controller");
+const authMiddleware = require("../middleware/auth.middleware");
+const userModel = require("../model/users.model");
+
+router.get("/", authMiddleware, async (req, res) => {
+  try {
+    const { userID } = req.body;
+    console.log(userID);
+    const user = await userModel.findById(userID);
+    console.log(user);
+    res.status(201).send({ message: "user balance is checked", balanceAmount: user.balance });
+  } catch (error) {
+    res.status(401).send(error.message);
+  }
+});
 
 router.post("/signup", async (req, res) => {
   const { username, email, password } = req.body;
@@ -18,16 +27,8 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
+  console.log(email, password);
   let data = await userLoginController(email, password);
-  res.status(data.status).send(data.payload);
-});
-
-router.get("/user/:id", async (req, res) => {
-  const { id } = req.params;
-  const { token } = req.headers;
-
-  let data = await userGetUserController(token);
   res.status(data.status).send(data.payload);
 });
 
