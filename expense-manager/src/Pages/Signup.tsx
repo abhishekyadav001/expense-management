@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signupAPI } from "../Redux/Auth/action";
 import { RootState } from "../Redux/store"; // Assuming you have a root state type
-
+interface FormData {
+    username: string;
+    email: string;
+    password: string;
+}
 // Initialize form data structure
 const initData = { username: "", email: "", password: "" };
 
 const Signup: React.FC = () => {
-    const [formData, setFormData] = useState(initData);
+    const [formData, setFormData] = useState<FormData>(initData);
     const { isLoading, token } = useSelector((store: RootState) => store.auth);
     const [toastMessage, setToastMessage] = useState<{ title: string; type: 'success' | 'error' | null }>({ title: '', type: null });
     const navigate = useNavigate();

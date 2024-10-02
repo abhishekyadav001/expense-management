@@ -7,6 +7,7 @@ import Profile from "../Pages/Profile";
 import Home from "../Pages/Home";
 import Transaction from "../Pages/Transaction";
 import Accounts from "../Pages/Accounts";
+import Notfoundpage from "../Pages/Notfoundpage";
 
 const MainRoutes: React.FC = () => {
   return (
@@ -38,6 +39,7 @@ const MainRoutes: React.FC = () => {
         }
       />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/*" element={<Notfoundpage />} />
     </Routes>
   );
 };

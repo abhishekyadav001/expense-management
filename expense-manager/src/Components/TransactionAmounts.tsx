@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PaymentCard from "./PaymentCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getTransactionHistory } from "../Redux/Transaction/action";
+import { checkBalance } from "../Redux/Auth/action";
 
 interface Transaction {
   amount: number;
@@ -10,13 +11,13 @@ interface Transaction {
 
 interface TransactionState {
   transaction: {
-    transactionHistory: Transaction[];
+    allTransaction: Transaction[];
     totalpages: number;
   };
 }
 
 const TransactionAmounts: React.FC = () => {
-  const { transactionHistory, totalpages } = useSelector((store: TransactionState) => store.transaction);
+  const { allTransaction, totalpages } = useSelector((store: TransactionState) => store.transaction);
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -47,14 +48,14 @@ const TransactionAmounts: React.FC = () => {
   }, [currentPage, totalpages]);
 
   useEffect(() => {
+    dispatch(checkBalance());
     dispatch(getTransactionHistory({ page: currentPage, limit: 8 }));
-  }, [currentPage, dispatch]);
-
+  }, [currentPage, dispatch, allTransaction.length]);
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-bold mb-4">Transaction History</h1>
       <div className="grid grid-cols-4 gap-6 w-full">
-        {transactionHistory.map((transaction, index) => (
+        {allTransaction.map((transaction, index) => (
           <PaymentCard key={index} {...transaction} />
         ))}
       </div>

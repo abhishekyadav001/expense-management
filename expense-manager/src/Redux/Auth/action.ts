@@ -4,6 +4,7 @@ import { Dispatch } from "redux";
 
 // Define the types for credentials and response structure
 interface Credentials {
+  username?:string;
   email: string;
   password: string;
 }

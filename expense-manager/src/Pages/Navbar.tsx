@@ -3,15 +3,15 @@ import { Link as RichLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAPI } from "../Redux/Auth/action";
 import logo from "../Assets/logo.png";
-import { RootState } from "../Redux/store"; // Import your root state type if needed
+import { RootState } from "../Redux/store"; // Import root state type if needed
 
-// Define your link type
+// Define link type
 interface LinkType {
     name: string;
     path: string;
 }
 
-// Define your token state type if not already done
+// Define token state type if not already done
 interface AuthState {
     token: string | null;
 }
@@ -32,10 +32,10 @@ const NavLink: React.FC<LinkType> = ({ path, name }) => (
 );
 
 const Navbar: React.FC = () => {
-    const { token } = useSelector((state: RootState) => state.auth as AuthState); // Replace RootState with your actual state type
+    const { token } = useSelector((state: RootState) => state.auth as AuthState); // Replace RootState with  actual state type
     const dispatch = useDispatch();
     const [popupVisible, setPopupVisible] = useState(false);
-
+    const [profilePop, setProfilePop] = useState(false);
     const handleLogout = () => {
         dispatch(logoutAPI());
         setPopupVisible(true); // Show the popup after logging out
@@ -43,12 +43,14 @@ const Navbar: React.FC = () => {
 
     return (
         <div className="px-4 py-3 bg-white border-b border-black sticky top-0 z-50">
-            <div className="flex items-center max-w-screen-lg mx-auto">
-                <RichLink to="/">
-                    <img src={logo} alt="Logo" className="w-8" />
-                </RichLink>
+            <div className="flex flex-row max-w-screen-lg mx-auto">
+                <div className="w-1px">
+                    <RichLink to="/">
+                        <img src={logo} alt="Logo" className="w-18 h-8" />
+                    </RichLink>
+                </div>
                 <div className="flex-1" />
-                <nav className="hidden md:flex space-x-4">
+                <nav className="hidden md:flex space-x-4 text-lg">
                     {Links.map((link) => (
                         <NavLink key={link.path} {...link} />
                     ))}
@@ -56,14 +58,14 @@ const Navbar: React.FC = () => {
                 <div className="flex-1" />
                 {token ? (
                     <div className="relative">
-                        <button className="focus:outline-none">
+                        <button className="focus:outline-none" onClick={() => setProfilePop(!profilePop)}>
                             <img
                                 className="w-8 h-8 rounded-full"
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX_xtnZ-ylE50HqNDHSkokxByuAK01e04YjB2LtLE-1k6TbEYdPIRR2bOn"
                                 alt="Avatar"
                             />
                         </button>
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+                        {profilePop ? (<div className="popup absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
                             <RichLink to="/profile" className="block px-4 py-2 hover:bg-gray-200">
                                 Profile
                             </RichLink>
@@ -74,7 +76,9 @@ const Navbar: React.FC = () => {
                             >
                                 Logout
                             </button>
-                        </div>
+                        </div>) : (
+                            <div className="hidden"></div>
+                        )}
                     </div>
                 ) : (
                     <div className="flex space-x-2">

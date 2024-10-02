@@ -7,6 +7,10 @@ export const TRANSACTION_HISTORY_REQUEST = "TRANSACTION_HISTORY_REQUEST" as cons
 export const TRANSACTION_HISTORY_SUCCESSFULLL = "TRANSACTION_HISTORY_SUCCESSFULLL" as const;
 export const TRANSACTION_HISTORY_FAILED = "TRANSACTION_HISTORY_FAILED" as const;
 
+// actionTypes.ts
+export const EDIT_TRANSACTION = "EDIT_TRANSACTION" as const;
+export const DELETE_TRANSACTION = "DELETE_TRANSACTION" as const;
+
 // Create a type for all action types
 export type TransactionActionTypes =
   | typeof TRANSACTION_REQUEST
@@ -14,4 +18,6 @@ export type TransactionActionTypes =
   | typeof TRANSACTION_FAILED
   | typeof TRANSACTION_HISTORY_REQUEST
   | typeof TRANSACTION_HISTORY_SUCCESSFULLL
-  | typeof TRANSACTION_HISTORY_FAILED;
+  | typeof TRANSACTION_HISTORY_FAILED
+  | typeof EDIT_TRANSACTION
+  | typeof DELETE_TRANSACTION;

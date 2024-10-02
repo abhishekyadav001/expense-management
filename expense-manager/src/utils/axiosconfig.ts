@@ -1,8 +1,8 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, RawAxiosRequestConfig } from "axios";
 import.meta.env
 import { getLocalStorageItem } from "./localStorage";
 
-const apiUrl =import.meta.env.VITE_API_URL;
+const apiUrl =import.meta.env.VITE_REACT_APP_API;
 
 // Create an axios instance
 export const axiosInstance = axios.create({
