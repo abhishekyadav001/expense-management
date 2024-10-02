@@ -39,16 +39,15 @@ async function userSignupController(username, email, password) {
 async function userLoginController(email, password) {
   try {
     const user = await userModel.findOne({ email });
-    if (user == null) {
+    
+    if (user == null || user.length <= 0) {
       return {
         status: 404,
         payload: { msg: "User Not Found" },
       };
     }
     const hashPassword = user.password;
-    console.log(hashPassword, "hash");
     const check = await argon2.verify(hashPassword, password);
-    console.log(user, passwrod);
     if (check) {
       const token = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: "7d" });
 

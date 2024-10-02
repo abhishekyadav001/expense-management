@@ -7,9 +7,9 @@ const userModel = require("../model/users.model");
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const { userID } = req.body;
-    console.log(userID);
+    // console.log(userID);
     const user = await userModel.findById(userID);
-    console.log(user);
+    // console.log(user);
     res.status(201).send({ message: "user balance is checked", balanceAmount: user.balance });
   } catch (error) {
     res.status(401).send(error.message);
@@ -27,7 +27,7 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  console.log(email, password);
+  // console.log(email, password);
   let data = await userLoginController(email, password);
   res.status(data.status).send(data.payload);
 });

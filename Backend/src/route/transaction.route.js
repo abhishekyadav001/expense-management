@@ -9,7 +9,7 @@ transactionRouter.get("/", async (req, res) => {
   const { userID } = req.body;
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 10;
-  
+
   const skip = (page - 1) * limit;
   const totaltransaction = await transactionModel.countDocuments({ userID });
 
@@ -42,11 +42,61 @@ transactionRouter.post("/", async (req, res) => {
         { balance: newAmount },
         { new: true, runValidators: true }
       );
-      console.log(users);
+      // console.log(users);
     }
     res.status(201).send({ msg: "Transaction Successfull" });
   } catch (error) {
     res.status(401).send(error.message);
   }
 });
+
+transactionRouter.put("/:transactionId", async (req, res) => {
+  try {
+    const { transactionId } = req.params;
+
+    // Check if transactionId is valid
+    if (!transactionId || transactionId === "undefined") {
+      return res.status(400).json({ message: "Invalid or missing transaction ID" });
+    }
+
+    // Find and update the transaction
+    const updatedTransaction = await transactionModel.findByIdAndUpdate(transactionId, req.body, { new: true });
+    // console.log("updatedTransaction", updatedTransaction);
+    const currentAmount = await userModel.findById(userID);
+
+    const currentBalance = currentAmount.balance;
+
+    if (type == "Deposit") {
+      const newAmount = currentBalance + amount;
+      const users = await userModel.findByIdAndUpdate(userID, { $set: { balance: newAmount } });
+    } else {
+      const newAmount = currentBalance - amount;
+      const users = await userModel.findByIdAndUpdate(
+        userID,
+        { balance: newAmount },
+        { new: true, runValidators: true }
+      );
+      // console.log(users);
+    }
+    // Handle case where transaction isn't found
+    if (!updatedTransaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    res.json(updatedTransaction);
+  } catch (error) {
+    res.status(500).json({ message: "Error editing transaction", error });
+  }
+});
+
+transactionRouter.delete("/:transactionId", async (req, res) => {
+  try {
+    const { transactionId } = req.params;
+    await transactionModel.findByIdAndDelete(transactionId);
+    res.json({ message: "Transaction deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting transaction", error });
+  }
+});
+
 module.exports = transactionRouter;
