@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { editTransaction, deleteTransaction } from "../Redux/Transaction/action"; // Adjust the path based on your file structure
+import { AppDispatch } from "../Redux/store"; // Import the AppDispatch type from your store
 
 interface PaymentCardProps {
-    id: string;  // Unique transaction ID
+    _id: string;  // Unique transaction ID
     amount: number;
     type: string;
 }
 
 const PaymentCard: React.FC<PaymentCardProps> = ({ _id, amount, type }) => {
-    const dispatch = useDispatch();
+    // Use the typed dispatch for thunk actions
+    const dispatch: AppDispatch = useDispatch();
 
     const [isEditing, setIsEditing] = useState(false);  // Controls modal visibility
     const [editAmount, setEditAmount] = useState(amount);  // For storing the edited amount
@@ -21,14 +23,15 @@ const PaymentCard: React.FC<PaymentCardProps> = ({ _id, amount, type }) => {
 
     const handleSave = () => {
         // Dispatch action to save the edited transaction
-        console.log(_id, editAmount, editType)
-        dispatch(editTransaction(_id, { amount: editAmount, type: editType }));
-        setIsEditing(false);  // Close the modal after saving
+        dispatch(editTransaction(_id, { amount: editAmount, type: editType }))
+            .then(() => setIsEditing(false))  // Close the modal after saving
+            .catch((error) => console.error("Failed to edit transaction:", error));
     };
 
     const handleDelete = () => {
         // Dispatch action to delete the transaction
-        dispatch(deleteTransaction(_id));
+        dispatch(deleteTransaction(_id))
+            .catch((error) => console.error("Failed to delete transaction:", error));
     };
 
     const handleCancel = () => {

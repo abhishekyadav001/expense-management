@@ -4,11 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getTransactionHistory } from "../Redux/Transaction/action";
 import { checkBalance } from "../Redux/Auth/action";
 
+// Transaction interface
 interface Transaction {
+  _id: string;  // Assuming the transaction has an _id field
   amount: number;
   type: string;
 }
 
+// Adjust the state shape according to your actual Redux store
 interface TransactionState {
   transaction: {
     allTransaction: Transaction[];
@@ -48,15 +51,16 @@ const TransactionAmounts: React.FC = () => {
   }, [currentPage, totalpages]);
 
   useEffect(() => {
-    dispatch(checkBalance());
-    dispatch(getTransactionHistory({ page: currentPage, limit: 8 }));
-  }, [currentPage, dispatch, allTransaction.length]);
+    dispatch(checkBalance()); // Update balance when the page changes
+    dispatch(getTransactionHistory({ page: currentPage, limit: 8 })); // Fetch transactions for the current page
+  }, [currentPage, dispatch]);
+
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-2xl font-bold mb-4">Transaction History</h1>
       <div className="grid grid-cols-4 gap-6 w-full">
-        {allTransaction.map((transaction, index) => (
-          <PaymentCard key={index} {...transaction} />
+        {allTransaction.map((transaction) => (
+          <PaymentCard key={transaction._id} {...transaction} />
         ))}
       </div>
       <div className="mt-6">
